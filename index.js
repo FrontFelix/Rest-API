@@ -1,14 +1,13 @@
 
 const express = require('express')
-<<<<<<< Updated upstream
-=======
 const { json } = require('express/lib/response')
 const fs = require('fs')
->>>>>>> Stashed changes
 // const fs = require('fs')
 const port = 3000
 
-const users = require('./data/users.json')
+const userFile = './data/users.json'
+
+const users = require(userFile)
 
 const server = express()
 
@@ -27,7 +26,16 @@ server.get('/users/:userID', (req,res) => {
 })
 
 server.post('/users', (req, res) => {
+    let userList = users
+    let newUser = {"id": users.length + 1, "firstName": "test", "lastName": "test", "message": "eheheh111"}
+    userList.push(newUser)
 
+    fs.writeFileSync(userFile, JSON.stringify(userList), function writeJSON(err) {
+        if(err) return console.log(err)
+        console.log('eee ändrar fil')
+    })
+
+    return res.send('User added ' + JSON.stringify(newUser))
 })
 
 server.put('/users/:userID', (req, res) => {
