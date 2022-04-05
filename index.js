@@ -1,6 +1,5 @@
 
 const express = require('express')
-const { json } = require('express/lib/response')
 const fs = require('fs')
 // const fs = require('fs')
 const port = 3000
@@ -20,7 +19,7 @@ server.get('/users/:userID', (req,res) => {
     let userID = parseInt(req.params.userID)
     let user = users.find((user) => user.id === userID)
 
-    if(!user) return res.send('No User with that ID')
+    if(!user) return res.status(404).send('No user Found')
 
     return res.send(user)
 })
@@ -42,7 +41,7 @@ server.put('/users/:userID', (req, res) => {
     let userID = parseInt(req.params.userID)
     let foundUser = users.find((user) => user.id === userID)
 
-    if(!foundUser) return res.send('No User with that ID')
+    if(!foundUser) return res.status(404).send('No user Found')
 
     let updatedUser = {"id": userID, "firstName": "updated", "lastName": "updated", "message": "eheheh111"}
     let updatedUsers = users.map(user => {
@@ -61,8 +60,18 @@ server.put('/users/:userID', (req, res) => {
 
 })
 
-server.delete('/users', (req, res) => {
-    
+server.delete('/users/:userID', (req, res) => {
+    let userID = parseInt(req.params.userID)
+    let foundUser = users.find((user) => user.id === userID)
+
+    if(!foundUser) return res.status(404).send('No user Found')
+
+    let updatedUsers = users.filter((user) => user.id !== userID)
+    fs.writeFileSync(userFile, JSON.stringify(updatedUsers), function writeJSON(err) {
+        if(err) return console.log(err)
+        console.log('eee ändrar fil')
+    })
+    return res.send('Removed ID ' + userID + ' \nnew list ' + JSON.stringify(updatedUsers))
 })
 
 server.listen(port, () => {
