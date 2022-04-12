@@ -1,35 +1,59 @@
-
+const methodOverride = require('method-override');
 const express = require('express')
 const fs = require('fs')
 // const fs = require('fs')
 const port = 3000
+const path = require('path')
 
 const userFile = './data/users.json'
 
 const users = require(userFile)
 
+let serverList = users
+
 const server = express()
+
+server.use(methodOverride('_method'));
+var bodyParser = require('body-parser')
+
+// parse application/x-www-form-urlencoded
+server.use(bodyParser.urlencoded({ extended: false }))
+
+// parse application/json
+server.use(bodyParser.json())
 
 
 server.get('/users', (req, res) => {
-    return res.send(users)
+    return res.send(serverList)
 })
 
-server.get('/users/:userID', (req,res) => {
-    let userID = parseInt(req.params.userID)
-    let user = users.find((user) => user.id === userID)
 
-    if(!user) return res.status(404).send('No user Found')
-
-    return res.send(user)
+server.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '/index.html'))
 })
 
-server.post('/users', (req, res) => {
-    let userList = users
-    let newUser = {"id": users.length + 1, "firstName": "test", "lastName": "test", "message": "eheheh111"}
-    userList.push(newUser)
 
-    fs.writeFileSync(userFile, JSON.stringify(userList), function writeJSON(err) {
+server.get('/user', (req, res) => {
+    let userID = parseInt(req.query.id || req.body.id)
+    let foundUser = serverList.find((user) => user.id === userID)
+
+    if(!foundUser) return res.status(404).send('No user Found')
+
+
+    return res.send('USER ' + JSON.stringify(foundUser))
+    
+})
+
+
+server.post('/user', (req, res) => {
+
+    let firstName = req.body.firstName
+    let lastName = req.body.lastName
+    let message = req.body.message
+    let newUser = {"id": serverList.length + 1, "firstName": firstName, "lastName": lastName, "message": message}
+    serverList.push(newUser)
+
+    fs.writeFileSync(userFile, JSON.stringify(serverList, null, 2), function writeJSON(err) {
         if(err) return console.log(err)
         console.log('eee ändrar fil')
     })
@@ -37,42 +61,50 @@ server.post('/users', (req, res) => {
     return res.send('User added ' + JSON.stringify(newUser))
 })
 
-server.put('/users/:userID', (req, res) => {
-    let userID = parseInt(req.params.userID)
-    let foundUser = users.find((user) => user.id === userID)
+server.put('/user', (req, res) => {
+    let userID = parseInt(req.body.id)
+    let foundUser = serverList.find((user) => user.id === userID)
 
     if(!foundUser) return res.status(404).send('No user Found')
 
-    let updatedUser = {"id": userID, "firstName": "updated", "lastName": "updated", "message": "eheheh111"}
-    let updatedUsers = users.map(user => {
+    let firstName = req.body.firstName
+    let lastName = req.body.lastName
+    let message = req.body.message
+    let updatedUser = {"id": userID, "firstName": firstName, "lastName": lastName, "message": message}
+    let updatedUsers = serverList.map(user => {
         if(user.id === userID) {
             user = updatedUser
             return user
         }
         return user
     })
-    fs.writeFileSync(userFile, JSON.stringify(updatedUsers), function writeJSON(err) {
+    serverList = updatedUsers
+    fs.writeFileSync(userFile, JSON.stringify(updatedUsers, null, 2), function writeJSON(err) {
         if(err) return console.log(err)
         console.log('eee ändrar fil')
     })
 
     return res.send('Updated User ' + userID + ' new information ' + JSON.stringify(updatedUser))
-
 })
 
-server.delete('/users/:userID', (req, res) => {
-    let userID = parseInt(req.params.userID)
-    let foundUser = users.find((user) => user.id === userID)
+
+server.delete('/user', (req, res) => {
+    let userID = parseInt(req.body.id)
+    let foundUser = serverList.find((user) => user.id === userID)
 
     if(!foundUser) return res.status(404).send('No user Found')
 
-    let updatedUsers = users.filter((user) => user.id !== userID)
-    fs.writeFileSync(userFile, JSON.stringify(updatedUsers), function writeJSON(err) {
+    let updatedUsers = serverList.filter((user) => user.id !== userID)
+    fs.writeFileSync(userFile, JSON.stringify(updatedUsers, null, 2), function writeJSON(err) {
         if(err) return console.log(err)
         console.log('eee ändrar fil')
     })
-    return res.send('Removed ID ' + userID + ' \nnew list ' + JSON.stringify(updatedUsers))
+    serverList = updatedUsers
+    return res.send('Removed ID ' + userID)
+    
 })
+
+
 
 server.listen(port, () => {
     console.log('Server startad på port ' + port)
