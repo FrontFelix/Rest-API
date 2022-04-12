@@ -12,7 +12,7 @@ Content-Type: application/json
 // HÄMTA HEM EN SPECIFIK USER MED ID
 ###
 
-POST http://localhost:3000/users HTTP/1.1
+POST http://localhost:3000/user HTTP/1.1
 Content-Type: application/json
 
 {
@@ -30,7 +30,7 @@ Content-Type: application/json
 {
     "id": "2"
 }
-// TA BORT EN UISER MED ID EFTER SISTA "/"
+// TA BORT EN UISER MED ID
 ###
 
 PUT http://localhost:3000/user HTTP/1.1
@@ -42,5 +42,5 @@ Content-Type: application/json
     "lastName": "editUser",
     "message": "editUser"
 }
-// HÄMTA HEM EN SPECIFIK USER MED ID
+// REDIGERA EN USER
 ###
