@@ -33,6 +33,7 @@ function getRandomID() {
 
 
 server.get('/users', (req, res) => {
+    if(!serverList) return res.status(404).send('No Users')
     return res.send(serverList)
 })
 
@@ -45,7 +46,7 @@ server.get('/', (req, res) => {
 server.get('/user', (req, res) => {
     let userID = parseInt(req.query.id || req.body.id)
     let foundUser = serverList.find((user) => user.id === userID)
-
+    if(!serverList) return res.status(404).send('No Users')
     if(!foundUser) return res.status(404).send('No user Found')
 
 
@@ -73,7 +74,7 @@ server.post('/user', (req, res) => {
 server.put('/user', (req, res) => {
     let userID = parseInt(req.body.id)
     let foundUser = serverList.find((user) => user.id === userID)
-
+    if(!serverList) return res.status(404).send('No Users')
     if(!foundUser) return res.status(404).send('No user Found')
 
     let firstName = req.body.firstName
@@ -100,7 +101,7 @@ server.put('/user', (req, res) => {
 server.delete('/user', (req, res) => {
     let userID = parseInt(req.body.id)
     let foundUser = serverList.find((user) => user.id === userID)
-
+    if(!serverList) return res.status(404).send('No Users')
     if(!foundUser) return res.status(404).send('No user Found')
 
     let updatedUsers = serverList.filter((user) => user.id !== userID)

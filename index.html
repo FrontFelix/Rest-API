@@ -14,7 +14,7 @@
 
     <h1>Hämta en user</h1>
     <form method="get" action="/user">
-        <input placeholder="Enter User ID" type="text" name="id">
+        <input required placeholder="Enter User ID" type="text" name="id">
         <button type="submit">Hämta user</button>
     </form>
     <!-- <h1>Hämta en specifik user</h1>
@@ -24,9 +24,9 @@
     </form> -->
     <h1>Lägg till en user</h1>
     <form method="post" action="/user">
-        <input placeholder="Enter your firstname" name="firstName" type="text">
-        <input placeholder="Enter your lastname" name="lastName" type="text">
-        <input placeholder="Mini Message Here" name="message" type="text">
+        <input required placeholder="Enter your firstname" name="firstName" type="text">
+        <input required placeholder="Enter your lastname" name="lastName" type="text">
+        <input required placeholder="Mini Message Here" name="message" type="text">
         <button type="submit">Lägg till en user</button>
     </form>
 
@@ -34,17 +34,17 @@
     <h1>Redigera en user</h1>
     <form method="post" action="/user?_method=PUT">
         <input type="hidden" name="_method" value="PUT">
-        <input placeholder="Enter User ID" type="text" name="id">
-        <input placeholder="Enter your firstname" name="firstName" type="text">
-        <input placeholder="Enter your lastname" name="lastName" type="text">
-        <input placeholder="Mini Message Here" name="message" type="text">
+        <input required placeholder="Enter User ID" type="text" name="id">
+        <input required placeholder="Enter your firstname" name="firstName" type="text">
+        <input required placeholder="Enter your lastname" name="lastName" type="text">
+        <input required placeholder="Mini Message Here" name="message" type="text">
         <button type="submit">Redigera user</button>
     </form>
 
     <h1>Ta bort en user</h1>
     <form action="/user?_method=DELETE" method="post">
         <input type="hidden" name="_method" value="DELETE">
-        <input placeholder="Enter User ID" type="text" name="id">
+        <input required placeholder="Enter User ID" type="text" name="id">
         <button type="submit">Ta bort användare</button>
     </form>
 
