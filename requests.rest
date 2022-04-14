@@ -7,7 +7,7 @@ GET http://localhost:3000/user HTTP/1.1
 Content-Type: application/json
 
 {
-    "id": "4"
+    "id": "2"
 }
 // HÄMTA HEM EN SPECIFIK USER MED ID
 ###
@@ -28,7 +28,7 @@ DELETE http://localhost:3000/user HTTP/1.1
 Content-Type: application/json
 
 {
-    "id": "2"
+    "id": "7"
 }
 // TA BORT EN UISER MED ID
 ###
